@@ -5,35 +5,35 @@ namespace sql_profiler
 
     public class Program
     {
-        
+
         // https://docs.microsoft.com/en-us/sql/relational-databases/sql-trace/create-and-run-traces-using-transact-sql-stored-procedures
         // https://docs.microsoft.com/en-us/sql/relational-databases/sql-trace/create-a-trace-transact-sql
         // https://docs.microsoft.com/en-us/sql/relational-databases/sql-trace/set-a-trace-filter-transact-sql
         // https://docs.microsoft.com/en-us/sql/relational-databases/sql-trace/modify-an-existing-trace-transact-sql
         // https://docs.microsoft.com/en-us/sql/relational-databases/sql-trace/view-a-saved-trace-transact-sql
         // https://docs.microsoft.com/en-us/sql/relational-databases/sql-trace/delete-a-trace-transact-sql
-        
+
         // Create a trace by using sp_trace_create.
         // Add events with sp_trace_setevent.
         // (Optional) Set a filter with sp_trace_setfilter.
         // Start the trace with sp_trace_setstatus.
         // Stop the trace with sp_trace_setstatus.
         // Close the trace with sp_trace_setstatus.
-        
+
         // https://stackoverflow.com/questions/637013/how-do-i-find-running-traces-in-sql-server
         // SELECT * FROM sys.traces
         // SELECT * FROM::fn_trace_getinfo(trace_id)
         // SELECT * FROM::fn_trace_getfilterinfo(trace_id)
-        
+
         // A trace must be stopped first before it can be closed.
         // EXEC sp_trace_setstatus [ @traceid = ] trace_id , [ @status = ] status  
 
         // EXEC sp_trace_setstatus 2, 0
         // EXEC sp_trace_setstatus 2, 2
-        
+
         // Execute sp_trace_setstatus by specifying @status = 0 to stop the trace.
         // Execute sp_trace_setstatus by specifying @status = 2 to close the trace and delete its information from the server.
-        
+
         private static ExpressProfiler.SqlServerProfiler s_profiler;
 
 
@@ -96,7 +96,7 @@ namespace sql_profiler
 
             public T Value<T>()
             {
-                return (T) this.InternalValue;
+                return (T)this.InternalValue;
             } // End Function Value 
 
 
@@ -121,7 +121,7 @@ namespace sql_profiler
         } // End Class Argument 
 
 
-        public static System.Collections.Generic.Dictionary<string, Argument> 
+        public static System.Collections.Generic.Dictionary<string, Argument>
         GetCommandLineArguments(string[] args
             , System.Collections.Generic.Dictionary<string, string> defaultValues)
         {
@@ -129,84 +129,108 @@ namespace sql_profiler
                 new sql_profiler.CommandLineArguments(args, defaultValues);
 
 
-            System.Collections.Generic.Dictionary<string, Argument> ls = new 
+            System.Collections.Generic.Dictionary<string, Argument> ls = new
                 System.Collections.Generic.Dictionary<string, Argument>(
                     System.StringComparer.InvariantCultureIgnoreCase
             );
-            
+
             ls.Add("server",
                 new Argument()
                 {
                     Key = "server"
-                    , @Type=typeof(string)
-                    , HelpText = @"The server\instance on which the DB to profile is"
-                    , Required = true
+                    ,
+                    @Type = typeof(string)
+                    ,
+                    HelpText = @"The server\instance on which the DB to profile is"
+                    ,
+                    Required = true
                 }
             );
-            
+
             ls.Add("db",
                 new Argument()
                 {
                     Key = "db"
-                    , @Type=typeof(string)
-                    , HelpText = "The db to profile"
-                    , Required = true
+                    ,
+                    @Type = typeof(string)
+                    ,
+                    HelpText = "The db to profile"
+                    ,
+                    Required = true
                 }
             );
-            
+
             ls.Add("username",
                 new Argument()
                 {
                     Key = "username"
-                    , @Type=typeof(string)
-                    , HelpText = "The SQL user-name; On Windows, uses integrated security if username is NULL or EMPTY."
-                    , Required = false
+                    ,
+                    @Type = typeof(string)
+                    ,
+                    HelpText = "The SQL user-name; On Windows, uses integrated security if username is NULL or EMPTY."
+                    ,
+                    Required = false
                 }
             );
-            
+
             ls.Add("password",
                 new Argument()
                 {
                     Key = "password"
-                    , @Type=typeof(string)
-                    , HelpText = "The password for the sql-user"
-                    , Required = false
+                    ,
+                    @Type = typeof(string)
+                    ,
+                    HelpText = "The password for the sql-user"
+                    ,
+                    Required = false
                 }
             );
-            
-            
+
+
             ls.Add("help",
                 new Argument()
                 {
                     Key = "help"
-                    , @Type=typeof(string)
-                    , HelpText = "Display help"
-                    , Required = false
-                    , IsCommand = true 
+                    ,
+                    @Type = typeof(string)
+                    ,
+                    HelpText = "Display help"
+                    ,
+                    Required = false
+                    ,
+                    IsCommand = true
                 }
             );
-            
-            
+
+
             ls.Add("list",
                 new Argument()
                 {
                     Key = "list"
-                    , @Type=typeof(string)
-                    , HelpText = "Show the command line values used."
-                    , Required = false 
-                    , IsCommand = true 
+                    ,
+                    @Type = typeof(string)
+                    ,
+                    HelpText = "Show the command line values used."
+                    ,
+                    Required = false
+                    ,
+                    IsCommand = true
                 }
             );
-            
-            
+
+
             ls.Add("showinput",
                 new Argument()
                 {
                     Key = "showinput"
-                    , @Type=typeof(string)
-                    , HelpText = "Show the command line values as passed from console."
-                    , Required = false
-                    , IsCommand = true
+                    ,
+                    @Type = typeof(string)
+                    ,
+                    HelpText = "Show the command line values as passed from console."
+                    ,
+                    Required = false
+                    ,
+                    IsCommand = true
                 }
             );
 
@@ -225,8 +249,8 @@ namespace sql_profiler
         public static void Help(System.Collections.Generic.Dictionary<string, Argument> arg_list)
         {
             System.Console.WriteLine("Valid command-line arguments:");
-            
-            foreach(System.Collections.Generic.KeyValuePair<string, Argument> kvp in arg_list)
+
+            foreach (System.Collections.Generic.KeyValuePair<string, Argument> kvp in arg_list)
             {
                 System.Console.WriteLine($"  --{kvp.Key}: {kvp.Value.HelpText}");
             } // Next kvp 
@@ -237,7 +261,7 @@ namespace sql_profiler
         public static void ListValues(System.Collections.Generic.Dictionary<string, Argument> arg_list)
         {
             System.Console.WriteLine("Used command-line argument's values:");
-            
+
             foreach (System.Collections.Generic.KeyValuePair<string, Argument> kvp in arg_list)
             {
                 if (!kvp.Value.IsCommand)
@@ -249,7 +273,7 @@ namespace sql_profiler
 
         public static void ShowInput(string[] args)
         {
-            
+
             for (int i = 0; i < args.Length; ++i)
             {
                 System.Console.WriteLine($"{i}: {args[i]}");
@@ -274,35 +298,35 @@ namespace sql_profiler
             if (isWindows)
                 return System.Environment.MachineName + @"\" + "SQLEXPRESS";
 
-            return  System.Environment.MachineName;
+            return System.Environment.MachineName;
         } // End Function GetPlatformDefaultInstance 
-        
-        
+
+
         static void Main(string[] args)
         {
             System.Console.Clear();
             System.Console.Title = "https://github.com/ststeiger/sql_profiler";
-            
+
             ﾠ300 = new System.Timers.Timer(4000);
             ﾠ300.AutoReset = true;
             ﾠ300.Elapsed += new System.Timers.ElapsedEventHandler(Sparta_Elapsed);
             ﾠ300.Start();
-            
-            MainTest(args);
+
+            DoProfiling(args);
             // DoProfiling(args);
         }
-        
+
         // https://stackoverflow.com/a/48274520
         private static System.Timers.Timer ﾠ300;
         private static bool s_showSparta = true;
-        
+
         private static void Sparta_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if(s_showSparta)
+            if (s_showSparta)
                 System.Console.Title = "THIS IS MADNESS!!!    Madness huh?    THIS IS SPARTA!!!!!!! ";
-            else 
+            else
                 System.Console.Title = "https://github.com/ststeiger/sql_profiler";
-                
+
             s_showSparta ^= true;
         }
 
@@ -314,12 +338,12 @@ namespace sql_profiler
             // string ar = $"--server {instance} --username WebAppWebServices --password TOP_SECRET --Db COR_Basic_Demo_V4";
 
             string ar = $"--server {instance} /db \"COR_Basic_Demo_V4\"";
-            
+
             bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
                     System.Runtime.InteropServices.OSPlatform.Windows
             );
-             
-            if(!isWindows)
+
+            if (!isWindows)
             {
                 try
                 {
@@ -333,11 +357,11 @@ namespace sql_profiler
                     throw;
                 }
             }
-            
+
             DoProfiling(ar.Split(' '));
         } // End Sub Main 
-        
-        
+
+
         static void DoProfiling(string[] args)
         {
             // https://github.com/dotnet/coreclr/issues/8565
@@ -349,16 +373,13 @@ namespace sql_profiler
             System.AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
 
-            System.Collections.Generic.Dictionary<string, string> defaultValues = 
+            System.Collections.Generic.Dictionary<string, string> defaultValues =
                 new System.Collections.Generic.Dictionary<string, string>();
 
-            defaultValues["server"] = GetPlatformDefaultInstance();
-            defaultValues["db"] = "COR_Basic_Demo_V4";
-            
-            System.Collections.Generic.Dictionary<string, Argument> arg_list = 
+            System.Collections.Generic.Dictionary<string, Argument> arg_list =
                 GetCommandLineArguments(args, defaultValues);
-            
-            
+
+
             if (arg_list["showinput"].IsPresent)
             {
                 ShowInput(args);
@@ -367,7 +388,7 @@ namespace sql_profiler
                 System.Console.ReadKey();
                 return;
             }
-            
+
             if (arg_list["list"].IsPresent)
             {
                 ListValues(arg_list);
@@ -376,7 +397,7 @@ namespace sql_profiler
                 System.Console.ReadKey();
                 return;
             }
-            
+
             if (arg_list["help"].IsPresent)
             {
                 Help(arg_list);
@@ -385,16 +406,17 @@ namespace sql_profiler
                 System.Console.ReadKey();
                 return;
             }
-            
-            
+
+
             string server = arg_list["server"].Value<string>();
             string db = arg_list["db"].Value<string>();
             string username = arg_list["username"].Value<string>();
             string password = arg_list["password"].Value<string>();
-            
 
+
+            System.Console.WriteLine($"Server = {server}, Db = {db}, Username = {username}");
             s_profiler = new ExpressProfiler.SqlServerProfiler(server, db, username, password);
-            
+
             s_profiler.StartProfiling();
 
 
@@ -402,14 +424,14 @@ namespace sql_profiler
 
             // System.Console.WriteLine("--- Press ENTER to stop profiling --- ");
             // System.Console.ReadLine();
-            
+
             // System.Console.WriteLine("--- Press any key to stop profiling --- ");
             // System.Console.ReadKey();
-            
+
             System.Console.WriteLine("--- Press ENTER to stop profiling --- ");
 
             System.ConsoleKey cc = default(System.ConsoleKey);
-            
+
             do
             {
                 // THIS IS MADNESS!!!   Madness huh?   THIS IS SPARTA!!!!!!! 
@@ -419,12 +441,12 @@ namespace sql_profiler
                 }
 
                 cc = System.Console.ReadKey().Key;
-                
-                if(cc == System.ConsoleKey.C)
+
+                if (cc == System.ConsoleKey.C)
                     System.Console.Clear();
-                
+
             } while (cc != System.ConsoleKey.Enter);
-            
+
             OnExit();
         } // End Sub Test 
 
