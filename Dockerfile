@@ -11,4 +11,4 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS prod
 WORKDIR /app
 COPY --from=publish /app .
 
-ENTRYPOINT ["dotnet", "sql_profiler.dll", "--server", "mssql", "--username", "sa", "--password", "Andromeda25"]
+ENTRYPOINT ["dotnet", "sql_profiler.dll"]
